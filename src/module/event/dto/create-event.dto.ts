@@ -6,7 +6,7 @@ import {
   IsDateString,
   Min,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateEventDto {
   @ApiProperty({
@@ -43,13 +43,13 @@ export class CreateEventDto {
   @IsDateString({}, { message: 'Date must be in valid ISO format' })
   date: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '10:30 AM',
     description: 'Event time',
   })
-  @IsNotEmpty({ message: 'Time is required!' })
+  @IsOptional()
   @IsString({ message: 'Time must be a string' })
-  time: string;
+  time?: string;
 
   @ApiProperty({
     example: 50,
