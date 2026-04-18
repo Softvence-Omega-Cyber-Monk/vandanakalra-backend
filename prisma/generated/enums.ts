@@ -33,3 +33,11 @@ export const AttendanceStatus = {
 } as const
 
 export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
+
+
+export const OutsideEventType = {
+  eventpoint: 'eventpoint',
+  tutorpoint: 'tutorpoint'
+} as const
+
+export type OutsideEventType = (typeof OutsideEventType)[keyof typeof OutsideEventType]

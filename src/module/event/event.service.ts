@@ -123,6 +123,8 @@ export class EventService {
         description: dto.description,
         date: eventDate,
         pointValue: dto.pointValue,
+        eventType: dto.eventType ?? undefined,
+        eventImageUrl: dto.eventImageUrl ?? undefined,
         userId: userId || undefined,
       },
     });
@@ -425,7 +427,7 @@ export class EventService {
     return eventsWithEnrollmentStatus;
   }
 
-  async getAttendedEventsWithStats(userId: string) {  
+  async getAttendedEventsWithStats(userId: string) {
     const user = await this.prisma.client.user.findUnique({
       where: { id: userId },
     });
@@ -434,39 +436,70 @@ export class EventService {
       throw new NotFoundException('User not found');
     }
 
-    const attendedEnrollments = await this.prisma.client.enrolled.findMany({
-      where: {
-        userId,
-        status: 'ATTENDED',
-      },
-      include: {
-        event: true,
-      },
-    });
+    const [attendedEnrollments, approvedOutsideEvents, attendanceCount] =
+      await Promise.all([
+        this.prisma.client.enrolled.findMany({
+          where: {
+            userId,
+            status: 'ATTENDED',
+          },
+          include: {
+            event: true,
+          },
+        }),
+        this.prisma.client.outsideEvent.findMany({
+          where: {
+            userId,
+            approved: true,
+          },
+        }),
+        this.prisma.client.attendence.count({
+          where: {
+            userId,
+            attendence: 'PRESENT',
+          },
+        }),
+      ]);
 
     const totalAttended = attendedEnrollments.length;
 
-    // Event points
-    const eventPoints = attendedEnrollments.reduce(
-      (sum, enrollment) => sum + (enrollment.event?.pointValue || 0),
-      0,
-    );
+    const attendedEventPoint = attendedEnrollments.reduce((sum, enrollment) => {
+      const pointValue = enrollment.event?.pointValue || 0;
+      return enrollment.event?.eventType === 'tutorpoint'
+        ? sum
+        : sum + pointValue;
+    }, 0);
 
-    // Attendance points (1 point per attendance)
-    const attendanceCount = await this.prisma.client.attendence.count({
-      where: {
-        userId,
-        attendence: 'PRESENT',
-      },
-    });
+    const attendedTutorPoint = attendedEnrollments.reduce((sum, enrollment) => {
+      const pointValue = enrollment.event?.pointValue || 0;
+      return enrollment.event?.eventType === 'tutorpoint'
+        ? sum + pointValue
+        : sum;
+    }, 0);
 
-    // Final total (merged)
-    const totalPoints = eventPoints + attendanceCount;
+    const outsideEventPoint = approvedOutsideEvents.reduce((sum, event) => {
+      return event.eventType === 'eventpoint' ? sum + event.pointValue : sum;
+    }, 0);
+
+    const outsideTutorPoint = approvedOutsideEvents.reduce((sum, event) => {
+      return event.eventType === 'tutorpoint' ? sum + event.pointValue : sum;
+    }, 0);
+
+    const eventPoint = attendedEventPoint + outsideEventPoint;
+    const tutorPoint = attendedTutorPoint + outsideTutorPoint;
+    const attendencePoint = attendanceCount;
+    const totalPoint = eventPoint + tutorPoint + attendencePoint;
 
     return {
       attendedEvents: attendedEnrollments,
       totalAttended,
-      totalPoints,
+      totalPoints: totalPoint,
+      pointSummary: {
+        totalPoint,
+        eventPoint,
+        tutorPoint,
+        attendencePoint,
+      },
     };
   }
 

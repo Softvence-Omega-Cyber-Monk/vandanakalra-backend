@@ -140,6 +140,8 @@ export const OutsideEventScalarFieldEnum = {
   date: 'date',
   createdAt: 'createdAt',
   approved: 'approved',
+  eventType: 'eventType',
+  eventImageUrl: 'eventImageUrl',
   userId: 'userId'
 } as const
 

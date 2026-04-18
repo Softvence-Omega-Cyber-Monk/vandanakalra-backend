@@ -15,6 +15,11 @@ enum AttendanceStatus {
   APPCENT
 }
 
+enum OutsideEventType {
+  eventpoint
+  tutorpoint
+}
+
 model User {
   id                   String     @id @default(uuid())
   firstname            String
@@ -57,7 +62,7 @@ model Event {
   studentEnrolled Int        @default(0)
   createdAt       DateTime   @default(now())
   enrolled        Enrolled[]
-  eventType       String     @default("INSIDE") // OUTSIDE
+  eventType       String     @default("eventpoint")
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
@@ -71,8 +76,12 @@ model OutsideEvent {
   date        DateTime?
   createdAt   DateTime  @default(now())
   approved    Boolean   @default(false)
-  user        User?     @relation(fields: [userId], references: [id])
-  userId      String?
+
+  eventType     OutsideEventType @default(eventpoint)
+  eventImageUrl String?
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Enrolled {

@@ -1,5 +1,6 @@
 // dtos/create-outside-event.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
+import { OutsideEventType } from '@prisma';
 import {
   IsString,
   IsOptional,
@@ -7,7 +8,9 @@ import {
   Min,
   IsNotEmpty,
   IsDateString,
+  IsEnum,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateOutsideEventDto {
   @ApiProperty({
@@ -31,6 +34,7 @@ export class CreateOutsideEventDto {
     description: 'Point value awarded for participating in the event',
     minimum: 1,
   })
+  @Type(() => Number)
   @IsInt()
   @Min(1)
   pointValue: number;
@@ -42,4 +46,27 @@ export class CreateOutsideEventDto {
   @IsNotEmpty({ message: 'Date is required!' })
   @IsDateString({}, { message: 'Date must be in valid ISO format' })
   date: string;
+
+  @ApiProperty({
+    example: 'eventpoint',
+    description: 'Outside event type. Select either eventpoint or tutorpoint',
+    enum: OutsideEventType,
+    enumName: 'OutsideEventType',
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(OutsideEventType, {
+    message: 'Event type must be one of: eventpoint, tutorpoint',
+  })
+  eventType?: OutsideEventType;
+
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description:
+      'Outside event image file. Uploaded Cloudinary URL is saved as eventImageUrl.',
+    required: false,
+  })
+  @IsOptional()
+  eventImageUrl?: any;
 }
