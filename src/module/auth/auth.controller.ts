@@ -51,7 +51,7 @@ export class AuthController {
     private authService: AuthService,
     private readonly cloudinaryService: CloudinaryService,
     private s3Service: S3Service, // ✅ Inject S3
-  ) { }
+  ) {}
 
   // refresh token
   @Post('refresh-token')
@@ -333,7 +333,13 @@ export class AuthController {
         statusCode: 200,
         success: true,
         message: 'User Profile retrieved',
-        data: { isActive: true },
+        data: {
+          user: { isActive: true },
+          totalPoint: 85,
+          eventPoint: 50,
+          tutorPoint: 30,
+          attendencePoint: 5,
+        },
       },
     },
   })
@@ -403,4 +409,3 @@ export class AuthController {
     });
   }
 }
-

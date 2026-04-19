@@ -30,7 +30,7 @@ export class AuthService {
     private jwtService: JwtService,
     private mailerService: MailerService,
     private notification: NotificationService,
-  ) { }
+  ) {}
 
   async register(dto: RegisterDto) {
     const existingUser = await this.prisma.client.user.findUnique({
@@ -491,7 +491,78 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    return { user };
+    const pointSummary = await this.getUserPointSummary(userId);
+
+    return { user, ...pointSummary };
+  }
+
+  private async getUserPointSummary(userId: string) {
+    const [attendedEnrollments, approvedOutsideEvents, attendencePoint] =
+      await Promise.all([
+        this.prisma.client.enrolled.findMany({
+          where: {
+            userId,
+            status: 'ATTENDED',
+          },
+          select: {
+            event: {
+              select: {
+                pointValue: true,
+                eventType: true,
+              },
+            },
+          },
+        }),
+        this.prisma.client.outsideEvent.findMany({
+          where: {
+            userId,
+            approved: true,
+          },
+          select: {
+            pointValue: true,
+            eventType: true,
+          },
+        }),
+        this.prisma.client.attendence.count({
+          where: {
+            userId,
+            attendence: 'PRESENT',
+          },
+        }),
+      ]);
+
+    const attendedEventPoint = attendedEnrollments.reduce((sum, enrollment) => {
+      const pointValue = enrollment.event?.pointValue || 0;
+      return enrollment.event?.eventType === 'tutorpoint'
+        ? sum
+        : sum + pointValue;
+    }, 0);
+
+    const attendedTutorPoint = attendedEnrollments.reduce((sum, enrollment) => {
+      const pointValue = enrollment.event?.pointValue || 0;
+      return enrollment.event?.eventType === 'tutorpoint'
+        ? sum + pointValue
+        : sum;
+    }, 0);
+
+    const outsideEventPoint = approvedOutsideEvents.reduce((sum, event) => {
+      return event.eventType === 'eventpoint' ? sum + event.pointValue : sum;
+    }, 0);
+
+    const outsideTutorPoint = approvedOutsideEvents.reduce((sum, event) => {
+      return event.eventType === 'tutorpoint' ? sum + event.pointValue : sum;
+    }, 0);
+
+    const eventPoint = attendedEventPoint + outsideEventPoint;
+    const tutorPoint = attendedTutorPoint + outsideTutorPoint;
+    const totalPoint = eventPoint + tutorPoint + attendencePoint;
+
+    return {
+      totalPoint,
+      eventPoint,
+      tutorPoint,
+      attendencePoint,
+    };
   }
 
   async getUsers() {
