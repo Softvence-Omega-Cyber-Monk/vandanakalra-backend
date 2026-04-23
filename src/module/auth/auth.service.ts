@@ -14,7 +14,7 @@ import { getTokens } from './auth.utils';
 import { MailerService } from '@nestjs-modules/mailer';
 // import { SystemRole } from '@prisma';
 import { RegisterDto } from './dto/register.dto';
-// import { userRole } from '@prisma';
+import { userRole } from '@prisma';
 import {
   AccountActiveDto,
   ChangePasswordDto,
@@ -113,7 +113,7 @@ export class AuthService {
         username: dto.username,
         password: hashedPassword,
         fcmToken: dto.fcmToken,
-        role: 'ADMIN',
+        role: userRole.ADMIN,
         isActive: true,
       },
     });
@@ -587,9 +587,74 @@ export class AuthService {
     return { user };
   }
 
+  async getAdmins() {
+    const admins = await this.prisma.client.user.findMany({
+      where: {
+        role: userRole.ADMIN,
+        isDeleted: false,
+      },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        username: true,
+        fcmToken: true,
+        image: true,
+        point: true,
+        role: true,
+        isActive: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return { admins };
+  }
+
+  async deleteAdmin(adminId: string) {
+    const admin = await this.prisma.client.user.findFirst({
+      where: {
+        id: adminId,
+        role: userRole.ADMIN,
+        isDeleted: false,
+      },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    const deletedAdmin = await this.prisma.client.user.update({
+      where: { id: adminId },
+      data: {
+        isDeleted: true,
+        isActive: false,
+      },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        username: true,
+        role: true,
+        isActive: true,
+        isDeleted: true,
+        updatedAt: true,
+      },
+    });
+
+    return { admin: deletedAdmin };
+  }
+
   async getTopFiveUserByPoint() {
     const users = await this.prisma.client.user.findMany({
-      where: { isDeleted: false },
+      where: {
+        role: userRole.USER,
+        isDeleted: false,
+      },
       orderBy: {
         point: 'desc',
       },

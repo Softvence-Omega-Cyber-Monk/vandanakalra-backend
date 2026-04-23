@@ -1,6 +1,7 @@
 enum userRole {
   USER
   ADMIN
+  SUPERADMIN
 }
 
 enum Status {
