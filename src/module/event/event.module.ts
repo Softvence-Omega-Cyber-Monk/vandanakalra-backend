@@ -4,9 +4,10 @@ import { EventService } from './event.service';
 import { PrismaModule } from 'src/module/prisma/prisma.module';
 import { NotificationModule } from '../notification/notification.module';
 import { EventReminderService } from './eventReminder.service';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
-  imports: [PrismaModule, NotificationModule],
+  imports: [PrismaModule, NotificationModule, CloudinaryModule],
   controllers: [EventController],
   providers: [EventService, EventReminderService],
 })

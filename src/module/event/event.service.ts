@@ -123,6 +123,8 @@ export class EventService {
         description: dto.description,
         date: eventDate,
         pointValue: dto.pointValue,
+        eventType: dto.eventType ?? undefined,
+        eventImageUrl: dto.eventImageUrl ?? undefined,
         userId: userId || undefined,
       },
     });
@@ -425,7 +427,7 @@ export class EventService {
     return eventsWithEnrollmentStatus;
   }
 
-  async getAttendedEventsWithStats(userId: string) {  
+  async getAttendedEventsWithStats(userId: string) {
     const user = await this.prisma.client.user.findUnique({
       where: { id: userId },
     });

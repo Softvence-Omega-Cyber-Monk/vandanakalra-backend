@@ -42,6 +42,8 @@ export type OutsideEventMinAggregateOutputType = {
   date: Date | null
   createdAt: Date | null
   approved: boolean | null
+  eventType: $Enums.OutsideEventType | null
+  eventImageUrl: string | null
   userId: string | null
 }
 
@@ -53,6 +55,8 @@ export type OutsideEventMaxAggregateOutputType = {
   date: Date | null
   createdAt: Date | null
   approved: boolean | null
+  eventType: $Enums.OutsideEventType | null
+  eventImageUrl: string | null
   userId: string | null
 }
 
@@ -64,6 +68,8 @@ export type OutsideEventCountAggregateOutputType = {
   date: number
   createdAt: number
   approved: number
+  eventType: number
+  eventImageUrl: number
   userId: number
   _all: number
 }
@@ -85,6 +91,8 @@ export type OutsideEventMinAggregateInputType = {
   date?: true
   createdAt?: true
   approved?: true
+  eventType?: true
+  eventImageUrl?: true
   userId?: true
 }
 
@@ -96,6 +104,8 @@ export type OutsideEventMaxAggregateInputType = {
   date?: true
   createdAt?: true
   approved?: true
+  eventType?: true
+  eventImageUrl?: true
   userId?: true
 }
 
@@ -107,6 +117,8 @@ export type OutsideEventCountAggregateInputType = {
   date?: true
   createdAt?: true
   approved?: true
+  eventType?: true
+  eventImageUrl?: true
   userId?: true
   _all?: true
 }
@@ -205,6 +217,8 @@ export type OutsideEventGroupByOutputType = {
   date: Date | null
   createdAt: Date
   approved: boolean
+  eventType: $Enums.OutsideEventType
+  eventImageUrl: string | null
   userId: string | null
   _count: OutsideEventCountAggregateOutputType | null
   _avg: OutsideEventAvgAggregateOutputType | null
@@ -239,6 +253,8 @@ export type OutsideEventWhereInput = {
   date?: Prisma.DateTimeNullableFilter<"OutsideEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutsideEvent"> | Date | string
   approved?: Prisma.BoolFilter<"OutsideEvent"> | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFilter<"OutsideEvent"> | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
   userId?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -251,6 +267,8 @@ export type OutsideEventOrderByWithRelationInput = {
   date?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   approved?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  eventImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -266,6 +284,8 @@ export type OutsideEventWhereUniqueInput = Prisma.AtLeast<{
   date?: Prisma.DateTimeNullableFilter<"OutsideEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutsideEvent"> | Date | string
   approved?: Prisma.BoolFilter<"OutsideEvent"> | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFilter<"OutsideEvent"> | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
   userId?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
@@ -278,6 +298,8 @@ export type OutsideEventOrderByWithAggregationInput = {
   date?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   approved?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  eventImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OutsideEventCountOrderByAggregateInput
   _avg?: Prisma.OutsideEventAvgOrderByAggregateInput
@@ -297,6 +319,8 @@ export type OutsideEventScalarWhereWithAggregatesInput = {
   date?: Prisma.DateTimeNullableWithAggregatesFilter<"OutsideEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OutsideEvent"> | Date | string
   approved?: Prisma.BoolWithAggregatesFilter<"OutsideEvent"> | boolean
+  eventType?: Prisma.EnumOutsideEventTypeWithAggregatesFilter<"OutsideEvent"> | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.StringNullableWithAggregatesFilter<"OutsideEvent"> | string | null
   userId?: Prisma.StringNullableWithAggregatesFilter<"OutsideEvent"> | string | null
 }
 
@@ -308,6 +332,8 @@ export type OutsideEventCreateInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
   user?: Prisma.UserCreateNestedOneWithoutOutsideEventsInput
 }
 
@@ -319,6 +345,8 @@ export type OutsideEventUncheckedCreateInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
   userId?: string | null
 }
 
@@ -330,6 +358,8 @@ export type OutsideEventUpdateInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneWithoutOutsideEventsNestedInput
 }
 
@@ -341,6 +371,8 @@ export type OutsideEventUncheckedUpdateInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -352,6 +384,8 @@ export type OutsideEventCreateManyInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
   userId?: string | null
 }
 
@@ -363,6 +397,8 @@ export type OutsideEventUpdateManyMutationInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OutsideEventUncheckedUpdateManyInput = {
@@ -373,6 +409,8 @@ export type OutsideEventUncheckedUpdateManyInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -394,6 +432,8 @@ export type OutsideEventCountOrderByAggregateInput = {
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   approved?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  eventImageUrl?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -409,6 +449,8 @@ export type OutsideEventMaxOrderByAggregateInput = {
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   approved?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  eventImageUrl?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -420,6 +462,8 @@ export type OutsideEventMinOrderByAggregateInput = {
   date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   approved?: Prisma.SortOrder
+  eventType?: Prisma.SortOrder
+  eventImageUrl?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -469,6 +513,10 @@ export type OutsideEventUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.OutsideEventScalarWhereInput | Prisma.OutsideEventScalarWhereInput[]
 }
 
+export type EnumOutsideEventTypeFieldUpdateOperationsInput = {
+  set?: $Enums.OutsideEventType
+}
+
 export type OutsideEventCreateWithoutUserInput = {
   id?: string
   title: string
@@ -477,6 +525,8 @@ export type OutsideEventCreateWithoutUserInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
 }
 
 export type OutsideEventUncheckedCreateWithoutUserInput = {
@@ -487,6 +537,8 @@ export type OutsideEventUncheckedCreateWithoutUserInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
 }
 
 export type OutsideEventCreateOrConnectWithoutUserInput = {
@@ -526,6 +578,8 @@ export type OutsideEventScalarWhereInput = {
   date?: Prisma.DateTimeNullableFilter<"OutsideEvent"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OutsideEvent"> | Date | string
   approved?: Prisma.BoolFilter<"OutsideEvent"> | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFilter<"OutsideEvent"> | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
   userId?: Prisma.StringNullableFilter<"OutsideEvent"> | string | null
 }
 
@@ -537,6 +591,8 @@ export type OutsideEventCreateManyUserInput = {
   date?: Date | string | null
   createdAt?: Date | string
   approved?: boolean
+  eventType?: $Enums.OutsideEventType
+  eventImageUrl?: string | null
 }
 
 export type OutsideEventUpdateWithoutUserInput = {
@@ -547,6 +603,8 @@ export type OutsideEventUpdateWithoutUserInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OutsideEventUncheckedUpdateWithoutUserInput = {
@@ -557,6 +615,8 @@ export type OutsideEventUncheckedUpdateWithoutUserInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OutsideEventUncheckedUpdateManyWithoutUserInput = {
@@ -567,6 +627,8 @@ export type OutsideEventUncheckedUpdateManyWithoutUserInput = {
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   approved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  eventType?: Prisma.EnumOutsideEventTypeFieldUpdateOperationsInput | $Enums.OutsideEventType
+  eventImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -579,6 +641,8 @@ export type OutsideEventSelect<ExtArgs extends runtime.Types.Extensions.Internal
   date?: boolean
   createdAt?: boolean
   approved?: boolean
+  eventType?: boolean
+  eventImageUrl?: boolean
   userId?: boolean
   user?: boolean | Prisma.OutsideEvent$userArgs<ExtArgs>
 }, ExtArgs["result"]["outsideEvent"]>
@@ -591,6 +655,8 @@ export type OutsideEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   date?: boolean
   createdAt?: boolean
   approved?: boolean
+  eventType?: boolean
+  eventImageUrl?: boolean
   userId?: boolean
   user?: boolean | Prisma.OutsideEvent$userArgs<ExtArgs>
 }, ExtArgs["result"]["outsideEvent"]>
@@ -603,6 +669,8 @@ export type OutsideEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   date?: boolean
   createdAt?: boolean
   approved?: boolean
+  eventType?: boolean
+  eventImageUrl?: boolean
   userId?: boolean
   user?: boolean | Prisma.OutsideEvent$userArgs<ExtArgs>
 }, ExtArgs["result"]["outsideEvent"]>
@@ -615,10 +683,12 @@ export type OutsideEventSelectScalar = {
   date?: boolean
   createdAt?: boolean
   approved?: boolean
+  eventType?: boolean
+  eventImageUrl?: boolean
   userId?: boolean
 }
 
-export type OutsideEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "pointValue" | "date" | "createdAt" | "approved" | "userId", ExtArgs["result"]["outsideEvent"]>
+export type OutsideEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "pointValue" | "date" | "createdAt" | "approved" | "eventType" | "eventImageUrl" | "userId", ExtArgs["result"]["outsideEvent"]>
 export type OutsideEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.OutsideEvent$userArgs<ExtArgs>
 }
@@ -642,6 +712,8 @@ export type $OutsideEventPayload<ExtArgs extends runtime.Types.Extensions.Intern
     date: Date | null
     createdAt: Date
     approved: boolean
+    eventType: $Enums.OutsideEventType
+    eventImageUrl: string | null
     userId: string | null
   }, ExtArgs["result"]["outsideEvent"]>
   composites: {}
@@ -1074,6 +1146,8 @@ export interface OutsideEventFieldRefs {
   readonly date: Prisma.FieldRef<"OutsideEvent", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"OutsideEvent", 'DateTime'>
   readonly approved: Prisma.FieldRef<"OutsideEvent", 'Boolean'>
+  readonly eventType: Prisma.FieldRef<"OutsideEvent", 'OutsideEventType'>
+  readonly eventImageUrl: Prisma.FieldRef<"OutsideEvent", 'String'>
   readonly userId: Prisma.FieldRef<"OutsideEvent", 'String'>
 }
     

@@ -11,7 +11,8 @@
 
 export const userRole = {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  SUPERADMIN: 'SUPERADMIN'
 } as const
 
 export type userRole = (typeof userRole)[keyof typeof userRole]
@@ -33,3 +34,11 @@ export const AttendanceStatus = {
 } as const
 
 export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
+
+
+export const OutsideEventType = {
+  eventpoint: 'eventpoint',
+  tutorpoint: 'tutorpoint'
+} as const
+
+export type OutsideEventType = (typeof OutsideEventType)[keyof typeof OutsideEventType]
