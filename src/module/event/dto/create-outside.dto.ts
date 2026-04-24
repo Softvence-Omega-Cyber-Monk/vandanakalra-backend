@@ -64,7 +64,7 @@ export class CreateOutsideEventDto {
     type: 'string',
     format: 'binary',
     description:
-      'Outside event image file. Uploaded Cloudinary URL is saved as eventImageUrl.',
+      'Outside event image file. Uploaded S3 URL is saved as eventImageUrl.',
     required: false,
   })
   @IsOptional()

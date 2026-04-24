@@ -10,7 +10,6 @@ import { SeederService } from './seeder/seeder.service';
 import { EventModule } from './module/event/event.module';
 import { EnrollementModule } from './module/enrollement/enrollement.module';
 import { NotificationModule } from './module/notification/notification.module';
-import { CloudinaryModule } from './module/cloudinary/cloudinary.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { S3Module } from './module/s3/s3.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -57,7 +56,6 @@ import { JwtModule } from '@nestjs/jwt';
     EventModule,
     EnrollementModule,
     NotificationModule,
-    CloudinaryModule,
     S3Module,
   ],
   controllers: [AppController],
