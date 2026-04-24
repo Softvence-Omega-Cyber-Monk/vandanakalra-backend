@@ -40,7 +40,6 @@ import { CreateAttendanceDto } from './dto/attendence.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { userRole } from '@prisma';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/forgetPasswordDto';
 import { S3Service } from '../s3/s3.service';
 
@@ -49,7 +48,6 @@ import { S3Service } from '../s3/s3.service';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private readonly cloudinaryService: CloudinaryService,
     private s3Service: S3Service, // ✅ Inject S3
   ) {}
 

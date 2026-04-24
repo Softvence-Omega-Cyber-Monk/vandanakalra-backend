@@ -5,7 +5,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NotificationModule } from '../notification/notification.module';
-import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { S3Module } from '../s3/s3.module';
 
 @Module({
@@ -22,7 +21,6 @@ import { S3Module } from '../s3/s3.module';
       }),
     }),
     NotificationModule,
-    CloudinaryModule,
     S3Module,
   ],
   providers: [AuthService, JwtStrategy],

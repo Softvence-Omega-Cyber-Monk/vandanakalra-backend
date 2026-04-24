@@ -37,17 +37,17 @@ import {
   UpdateUserNotificationSettingsDto,
 } from './dto/update-event.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import {
   fileFilter,
   multerMemoryStorage,
 } from 'src/common/utils/file-upload.util';
+import { S3Service } from '../s3/s3.service';
 
 @Controller('event')
 export class EventController {
   constructor(
     private eventService: EventService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly s3Service: S3Service,
   ) {}
 
   // Create event
@@ -115,11 +115,7 @@ export class EventController {
     let eventImageUrl = dto.eventImageUrl;
 
     if (file) {
-      const uploadedImage = await this.cloudinaryService.uploadImage(
-        file,
-        'outside-events',
-      );
-      eventImageUrl = uploadedImage.secure_url;
+      eventImageUrl = await this.s3Service.uploadFile(file, 'outside-events');
     }
 
     const result = await this.eventService.createOutsideEvent(
