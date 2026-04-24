@@ -1,4 +1,33 @@
 services:
+  api-dev:
+    profiles: ['dev']
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${PACKAGE_NAME}_api_dev
+    restart: always
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/${PACKAGE_NAME}_db
+      BASE_URL: http://0.0.0.0:3000
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "
+        npx prisma migrate deploy;
+        npm run start
+      "
+    volumes:
+      - files-data:/app/uploads
+      - temp-data:/app/tmp
+      - logs-data:/app/logs
+
   api:
     profiles: ['prod']
     platform: linux/amd64
@@ -77,3 +106,6 @@ networks:
     name: ${PACKAGE_NAME}_network
     labels:
       - 'project=${PACKAGE_NAME}'
+
+
+# more
