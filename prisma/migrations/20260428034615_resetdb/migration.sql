@@ -1,11 +1,14 @@
 -- CreateEnum
-CREATE TYPE "userRole" AS ENUM ('USER', 'ADMIN');
+CREATE TYPE "userRole" AS ENUM ('USER', 'ADMIN', 'SUPERADMIN');
 
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('JOIN', 'SCANNED', 'ATTENDED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "AttendanceStatus" AS ENUM ('PRESENT', 'APPCENT');
+
+-- CreateEnum
+CREATE TYPE "OutsideEventType" AS ENUM ('eventpoint', 'tutorpoint');
 
 -- CreateTable
 CREATE TABLE "OtpCode" (
@@ -54,11 +57,11 @@ CREATE TABLE "Event" (
     "description" TEXT,
     "pointValue" INTEGER NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
-    "time" TEXT NOT NULL,
+    "time" TEXT,
     "maxStudent" INTEGER NOT NULL,
     "studentEnrolled" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "eventType" TEXT NOT NULL DEFAULT 'INSIDE',
+    "eventType" TEXT NOT NULL DEFAULT 'eventpoint',
     "userId" TEXT,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
@@ -73,6 +76,8 @@ CREATE TABLE "OutsideEvent" (
     "date" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "approved" BOOLEAN NOT NULL DEFAULT false,
+    "eventType" "OutsideEventType" NOT NULL DEFAULT 'eventpoint',
+    "eventImageUrl" TEXT,
     "userId" TEXT,
 
     CONSTRAINT "OutsideEvent_pkey" PRIMARY KEY ("id")
