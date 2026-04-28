@@ -957,6 +957,8 @@ export const OutsideEventScalarFieldEnum = {
   date: 'date',
   createdAt: 'createdAt',
   approved: 'approved',
+  eventType: 'eventType',
+  eventImageUrl: 'eventImageUrl',
   userId: 'userId'
 } as const
 
@@ -1075,6 +1077,20 @@ export type EnumuserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'userRole[]'
  */
 export type ListEnumuserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'userRole[]'>
+    
+
+
+/**
+ * Reference to a field of type 'OutsideEventType'
+ */
+export type EnumOutsideEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OutsideEventType'>
+    
+
+
+/**
+ * Reference to a field of type 'OutsideEventType[]'
+ */
+export type ListEnumOutsideEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OutsideEventType[]'>
     
 
 

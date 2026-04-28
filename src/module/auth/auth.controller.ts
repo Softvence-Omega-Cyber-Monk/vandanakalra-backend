@@ -40,7 +40,6 @@ import { CreateAttendanceDto } from './dto/attendence.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { userRole } from '@prisma';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from 'src/common/services/cloudinary.service';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/forgetPasswordDto';
 import { S3Service } from '../s3/s3.service';
 
@@ -49,9 +48,8 @@ import { S3Service } from '../s3/s3.service';
 export class AuthController {
   constructor(
     private authService: AuthService,
-    private readonly cloudinaryService: CloudinaryService,
     private s3Service: S3Service, // ✅ Inject S3
-  ) { }
+  ) {}
 
   // refresh token
   @Post('refresh-token')
@@ -146,10 +144,10 @@ export class AuthController {
   }
 
   @Post('create-admin')
-  @Roles(userRole.ADMIN)
+  @Roles(userRole.SUPERADMIN)
   @ApiOperation({
     summary: 'Create admin user',
-    description: 'Allows an admin to create another admin user',
+    description: 'Allows a super admin to create an admin user',
   })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -333,7 +331,13 @@ export class AuthController {
         statusCode: 200,
         success: true,
         message: 'User Profile retrieved',
-        data: { isActive: true },
+        data: {
+          user: { isActive: true },
+          totalPoint: 85,
+          eventPoint: 50,
+          tutorPoint: 30,
+          attendencePoint: 5,
+        },
       },
     },
   })
@@ -385,6 +389,41 @@ export class AuthController {
     });
   }
 
+  @Get('admins')
+  @Roles(userRole.SUPERADMIN)
+  @ApiOperation({ summary: 'Get all admin users' })
+  @ApiResponse({
+    status: 200,
+    description: 'Admin users retrieved successfully',
+  })
+  async getAdmins(@Res() res: Response) {
+    const result = await this.authService.getAdmins();
+
+    return sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Admin users retrieved successfully',
+      data: result,
+    });
+  }
+
+  @Delete('admins/:adminId')
+  @Roles(userRole.SUPERADMIN)
+  @ApiOperation({ summary: 'Delete an admin user' })
+  @ApiParam({ name: 'adminId', description: 'The ID of the admin to delete' })
+  @ApiResponse({ status: 200, description: 'Admin deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Admin not found' })
+  async deleteAdmin(@Param('adminId') adminId: string, @Res() res: Response) {
+    const result = await this.authService.deleteAdmin(adminId);
+
+    return sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Admin deleted successfully',
+      data: result,
+    });
+  }
+
   @Delete('delete-account/:userId')
   @ApiOperation({ summary: 'Permanently delete user account' })
   @ApiParam({ name: 'userId', description: 'The ID of the user to delete' })
@@ -403,4 +442,3 @@ export class AuthController {
     });
   }
 }
-

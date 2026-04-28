@@ -192,6 +192,23 @@ export type EnumuserRoleWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumuserRoleFilter<$PrismaModel>
 }
 
+export type EnumOutsideEventTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.OutsideEventType | Prisma.EnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel> | $Enums.OutsideEventType
+}
+
+export type EnumOutsideEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OutsideEventType | Prisma.EnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOutsideEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.OutsideEventType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel>
+}
+
 export type EnumStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.Status | Prisma.EnumStatusFieldRefInput<$PrismaModel>
   in?: $Enums.Status[] | Prisma.ListEnumStatusFieldRefInput<$PrismaModel>
@@ -415,6 +432,23 @@ export type NestedEnumuserRoleWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumuserRoleFilter<$PrismaModel>
   _max?: Prisma.NestedEnumuserRoleFilter<$PrismaModel>
+}
+
+export type NestedEnumOutsideEventTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.OutsideEventType | Prisma.EnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel> | $Enums.OutsideEventType
+}
+
+export type NestedEnumOutsideEventTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OutsideEventType | Prisma.EnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.OutsideEventType[] | Prisma.ListEnumOutsideEventTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumOutsideEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.OutsideEventType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOutsideEventTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumStatusFilter<$PrismaModel = never> = {

@@ -12,12 +12,20 @@ import {
   Patch,
   NotFoundException,
   UnauthorizedException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto, UpdateEventDto } from './dto';
 import sendResponse from '../utils/sendResponse';
 import type { Request, Response } from 'express';
-import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorators';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { userRole } from '@prisma';
@@ -28,10 +36,19 @@ import {
   UpdateAdminSettingsDto,
   UpdateUserNotificationSettingsDto,
 } from './dto/update-event.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  fileFilter,
+  multerMemoryStorage,
+} from 'src/common/utils/file-upload.util';
+import { S3Service } from '../s3/s3.service';
 
 @Controller('event')
 export class EventController {
-  constructor(private eventService: EventService) {}
+  constructor(
+    private eventService: EventService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   // Create event
   @Post('create-event')
@@ -64,10 +81,19 @@ export class EventController {
     });
   }
 
+  @UseInterceptors(
+    FileInterceptor('eventImageUrl', {
+      storage: multerMemoryStorage,
+      fileFilter,
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
   @Post('create-outside-event')
+  @ApiConsumes('multipart/form-data')
   @ApiOperation({
     summary: 'Create a new outside event',
-    description: 'Creates a new outside event (requires admin role)',
+    description:
+      'Creates a new outside event for the authenticated user, including optional event type and image upload',
   })
   @ApiBody({
     description: 'Data for the outside event',
@@ -79,13 +105,23 @@ export class EventController {
   })
   async createOutsideEvent(
     @Body() dto: CreateOutsideEventDto,
+    @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
     @Req() req: Request,
   ) {
     // You can pass userId from request if needed (e.g., for audit)
     // For now, keeping it optional as per your service signature
     const userId = req.user!.id;
-    const result = await this.eventService.createOutsideEvent(dto, userId);
+    let eventImageUrl = dto.eventImageUrl;
+
+    if (file) {
+      eventImageUrl = await this.s3Service.uploadFile(file, 'outside-events');
+    }
+
+    const result = await this.eventService.createOutsideEvent(
+      { ...dto, eventImageUrl },
+      userId,
+    );
 
     return sendResponse(res, {
       statusCode: HttpStatus.CREATED,
@@ -291,7 +327,6 @@ export class EventController {
       data: result,
     });
   }
-
 
   @Get('scannedEventByUser')
   @Roles(userRole.ADMIN, userRole.USER)
