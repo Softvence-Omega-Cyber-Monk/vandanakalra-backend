@@ -49,7 +49,7 @@ export class CreateEventDto {
   })
   @IsOptional()
   @IsString({ message: 'Time must be a string' })
-  time?: string;
+  time?: string; //time optional
 
   @ApiProperty({
     example: 50,
