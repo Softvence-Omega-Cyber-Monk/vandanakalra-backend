@@ -2,6 +2,8 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -25,6 +27,8 @@ import { CreateAttendanceDto } from './dto/attendence.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -123,41 +127,84 @@ export class AuthService {
 
   // login
   async login(dto: LoginDto) {
-    const user = await this.prisma.client.user.findUnique({
-      where: { username: dto.username },
-    });
+    let user;
+    try {
+      user = await this.prisma.client.user.findUnique({
+        where: { username: dto.username },
+      });
+    } catch (err: any) {
+      this.logger.error(`Database query failed during login for ${dto.username}: ${err.message}`, err.stack);
+      throw new InternalServerErrorException(
+        `Database error: Unable to connect or query user table (${err.message || 'Check database connection'})`,
+      );
+    }
 
-    if (!user || !dto.password || !dto.fcmToken || !dto.role) {
-      throw new ForbiddenException('Invalid credentials');
+    if (!user) {
+      throw new UnauthorizedException(
+        `User '${dto.username}' not found. Please verify the username or register.`,
+      );
     }
 
     if (user.role !== dto.role) {
-      throw new ForbiddenException(`${dto.role} role is not allowed here `);
+      throw new ForbiddenException(
+        `Role mismatch: Account '${dto.username}' has role '${user.role}', but login requested '${dto.role}'.`,
+      );
     }
 
     if (user.isDeleted) {
-      throw new BadRequestException('User is deleted!');
+      throw new ForbiddenException(
+        'This account has been deleted. Please contact support.',
+      );
     }
 
-    const isMatch = await bcrypt.compare(dto.password, user.password);
+    if (!user.isActive) {
+      throw new ForbiddenException(
+        'Account is not active yet. Please wait for admin approval.',
+      );
+    }
+
+    let isMatch = false;
+    try {
+      isMatch = await bcrypt.compare(dto.password, user.password);
+    } catch (err: any) {
+      this.logger.error(`Password comparison failed: ${err.message}`, err.stack);
+      throw new InternalServerErrorException(
+        `Authentication error: Failed to verify password (${err.message})`,
+      );
+    }
+
     if (!isMatch) {
-      throw new ForbiddenException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect password. Please try again.');
     }
 
-    const updateToken = await this.prisma.client.user.update({
-      where: { username: dto.username },
-      data: { fcmToken: dto.fcmToken },
-    });
-    const tokens = await getTokens(
-      this.jwtService,
-      user.id,
-      user.username,
-      user.role,
-      user.firstname,
-      user.lastname,
-    );
+    try {
+      await this.prisma.client.user.update({
+        where: { username: dto.username },
+        data: { fcmToken: dto.fcmToken },
+      });
+    } catch (err: any) {
+      this.logger.error(`Failed to update FCM token for user ${dto.username}: ${err.message}`, err.stack);
+      throw new InternalServerErrorException(
+        `Database error: Failed to update FCM token (${err.message})`,
+      );
+    }
 
-    return { user, ...tokens };
+    try {
+      const tokens = await getTokens(
+        this.jwtService,
+        user.id,
+        user.username,
+        user.role,
+        user.firstname,
+        user.lastname,
+      );
+      return { user, ...tokens };
+    } catch (err: any) {
+      this.logger.error(`Token generation error for ${dto.username}: ${err.message}`, err.stack);
+      throw new InternalServerErrorException(
+        `Token generation error: ${err.message || 'Failed to generate JWT tokens'}`,
+      );
+    }
   }
 
   async active_account(dto: AccountActiveDto) {

@@ -13,19 +13,36 @@ export async function getTokens(
   userFirstName: string,
   userLastName: string,
 ) {
+  const accessSecret = process.env.ACCESS_TOKEN_SECRET;
+  const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+
+  if (!accessSecret) {
+    throw new Error(
+      'ACCESS_TOKEN_SECRET is missing from environment variables (.env)',
+    );
+  }
+  if (!refreshSecret) {
+    throw new Error(
+      'REFRESH_TOKEN_SECRET is missing from environment variables (.env)',
+    );
+  }
+
+  const accessExpiresIn = process.env.ACCESS_TOKEN_EXPIREIN || '1d';
+  const refreshExpiresIn = process.env.REFRESH_TOKEN_EXPIREIN || '7d';
+
   const [access_token, refresh_token] = await Promise.all([
     jwtService.signAsync(
       { id: userId, username, role, userFirstName, userLastName },
       {
-        secret: process.env.ACCESS_TOKEN_SECRET,
-        expiresIn: process.env.ACCESS_TOKEN_EXPIREIN,
+        secret: accessSecret,
+        expiresIn: accessExpiresIn,
       } as any,
     ),
     jwtService.signAsync(
       { id: userId, username, role, userFirstName, userLastName },
       {
-        secret: process.env.REFRESH_TOKEN_SECRET,
-        expiresIn: process.env.REFRESH_TOKEN_EXPIREIN,
+        secret: refreshSecret,
+        expiresIn: refreshExpiresIn,
       } as any,
     ),
   ]);
