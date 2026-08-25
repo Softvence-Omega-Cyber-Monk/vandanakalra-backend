@@ -16,21 +16,27 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message: string | object = 'Internal server error';
+    let errorDetail: string | undefined;
 
-    if (!(exception instanceof HttpException)) {
-      const error = exception as Error;
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      const res = exception.getResponse();
+      message = typeof res === 'string' ? res : (res as any).message || res;
+    } else if (exception instanceof Error) {
+      errorDetail = exception.message;
+      message = exception.message || 'Internal server error';
       this.logger.error(
-        `${request.method} ${request.url} failed`,
-        error?.stack || String(exception),
+        `${request.method} ${request.url} failed: ${exception.message}`,
+        exception.stack,
+      );
+    } else {
+      message = String(exception);
+      this.logger.error(
+        `${request.method} ${request.url} failed with unknown error:`,
+        String(exception),
       );
     }
 
@@ -41,7 +47,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         typeof message === 'string'
           ? message
           : (message as any).message || message,
+      ...(errorDetail && status === HttpStatus.INTERNAL_SERVER_ERROR
+        ? { error: errorDetail }
+        : {}),
       path: request.url,
+      timestamp: new Date().toISOString(),
     });
   }
 }
