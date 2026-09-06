@@ -34,6 +34,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import {
   AccountActiveDto,
   ChangePasswordDto,
+  UpdateUserPointDto,
   UpdateUserProfileDto,
 } from './dto/update-account.dto';
 import { CreateAttendanceDto } from './dto/attendence.dto';
@@ -373,6 +374,28 @@ export class AuthController {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'Top 5 User  retrieved',
+      data: result,
+    });
+  }
+
+  @Patch('users/:userId/points')
+  @Roles(userRole.ADMIN, userRole.SUPERADMIN)
+  @ApiOperation({ summary: 'Manually update user points' })
+  @ApiParam({ name: 'userId', description: 'The ID of the user to update' })
+  @ApiBody({ type: UpdateUserPointDto })
+  @ApiResponse({ status: 200, description: 'User points updated successfully' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async updateUserPoint(
+    @Param('userId') userId: string,
+    @Body() dto: UpdateUserPointDto,
+    @Res() res: Response,
+  ) {
+    const result = await this.authService.updateUserPoint(userId, dto);
+
+    return sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'User points updated successfully',
       data: result,
     });
   }

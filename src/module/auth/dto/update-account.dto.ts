@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsIn,
-  IsOptional,
-  IsString,
-  isString,
-  MinLength,
-} from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class AccountActiveDto {
   @ApiProperty({
@@ -70,4 +64,16 @@ export class UpdateUserProfileDto {
   })
   @IsOptional()
   image?: any;
+}
+
+export class UpdateUserPointDto {
+  @ApiProperty({
+    description: 'New total point balance for the user',
+    example: 100,
+    minimum: 0,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  point: number;
 }

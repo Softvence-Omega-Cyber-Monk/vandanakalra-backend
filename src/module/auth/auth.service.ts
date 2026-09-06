@@ -20,6 +20,7 @@ import { userRole } from '@prisma';
 import {
   AccountActiveDto,
   ChangePasswordDto,
+  UpdateUserPointDto,
   UpdateUserProfileDto,
 } from './dto/update-account.dto';
 import { NotificationService } from '../notification/notification.service';
@@ -133,7 +134,10 @@ export class AuthService {
         where: { username: dto.username },
       });
     } catch (err: any) {
-      this.logger.error(`Database query failed during login for ${dto.username}: ${err.message}`, err.stack);
+      this.logger.error(
+        `Database query failed during login for ${dto.username}: ${err.message}`,
+        err.stack,
+      );
       throw new InternalServerErrorException(
         `Database error: Unable to connect or query user table (${err.message || 'Check database connection'})`,
       );
@@ -167,7 +171,10 @@ export class AuthService {
     try {
       isMatch = await bcrypt.compare(dto.password, user.password);
     } catch (err: any) {
-      this.logger.error(`Password comparison failed: ${err.message}`, err.stack);
+      this.logger.error(
+        `Password comparison failed: ${err.message}`,
+        err.stack,
+      );
       throw new InternalServerErrorException(
         `Authentication error: Failed to verify password (${err.message})`,
       );
@@ -183,7 +190,10 @@ export class AuthService {
         data: { fcmToken: dto.fcmToken },
       });
     } catch (err: any) {
-      this.logger.error(`Failed to update FCM token for user ${dto.username}: ${err.message}`, err.stack);
+      this.logger.error(
+        `Failed to update FCM token for user ${dto.username}: ${err.message}`,
+        err.stack,
+      );
       throw new InternalServerErrorException(
         `Database error: Failed to update FCM token (${err.message})`,
       );
@@ -200,7 +210,10 @@ export class AuthService {
       );
       return { user, ...tokens };
     } catch (err: any) {
-      this.logger.error(`Token generation error for ${dto.username}: ${err.message}`, err.stack);
+      this.logger.error(
+        `Token generation error for ${dto.username}: ${err.message}`,
+        err.stack,
+      );
       throw new InternalServerErrorException(
         `Token generation error: ${err.message || 'Failed to generate JWT tokens'}`,
       );
@@ -709,6 +722,34 @@ export class AuthService {
     });
 
     return { users };
+  }
+
+  async updateUserPoint(userId: string, dto: UpdateUserPointDto) {
+    const user = await this.prisma.client.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || user.isDeleted) {
+      throw new NotFoundException('User not found');
+    }
+
+    const updatedUser = await this.prisma.client.user.update({
+      where: { id: userId },
+      data: { point: dto.point },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        username: true,
+        point: true,
+        role: true,
+        isActive: true,
+        isDeleted: true,
+        updatedAt: true,
+      },
+    });
+
+    return { user: updatedUser };
   }
 
   async deleteAccount(userId: string) {
