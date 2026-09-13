@@ -557,39 +557,50 @@ export class AuthService {
   }
 
   private async getUserPointSummary(userId: string) {
-    const [attendedEnrollments, approvedOutsideEvents, attendencePoint] =
-      await Promise.all([
-        this.prisma.client.enrolled.findMany({
-          where: {
-            userId,
-            status: 'ATTENDED',
-          },
-          select: {
-            event: {
-              select: {
-                pointValue: true,
-                eventType: true,
-              },
+    const [
+      attendedEnrollments,
+      approvedOutsideEvents,
+      attendencePoint,
+      userData,
+    ] = await Promise.all([
+      this.prisma.client.enrolled.findMany({
+        where: {
+          userId,
+          status: 'ATTENDED',
+        },
+        select: {
+          event: {
+            select: {
+              pointValue: true,
+              eventType: true,
             },
           },
-        }),
-        this.prisma.client.outsideEvent.findMany({
-          where: {
-            userId,
-            approved: true,
-          },
-          select: {
-            pointValue: true,
-            eventType: true,
-          },
-        }),
-        this.prisma.client.attendence.count({
-          where: {
-            userId,
-            attendence: 'PRESENT',
-          },
-        }),
-      ]);
+        },
+      }),
+      this.prisma.client.outsideEvent.findMany({
+        where: {
+          userId,
+          approved: true,
+        },
+        select: {
+          pointValue: true,
+          eventType: true,
+        },
+      }),
+      this.prisma.client.attendence.count({
+        where: {
+          userId,
+          attendence: 'PRESENT',
+        },
+      }),
+      this.prisma.client.user.findUnique({
+        where: { id: userId },
+        select: {
+          tutorAdjustment: true,
+          eventAdjustment: true,
+        },
+      }),
+    ]);
 
     const attendedEventPoint = attendedEnrollments.reduce((sum, enrollment) => {
       const pointValue = enrollment.event?.pointValue || 0;
@@ -613,8 +624,17 @@ export class AuthService {
       return event.eventType === 'tutorpoint' ? sum + event.pointValue : sum;
     }, 0);
 
-    const eventPoint = attendedEventPoint + outsideEventPoint;
-    const tutorPoint = attendedTutorPoint + outsideTutorPoint;
+    const tutorAdjustment = userData?.tutorAdjustment ?? 0;
+    const eventAdjustment = userData?.eventAdjustment ?? 0;
+
+    const eventPoint = Math.max(
+      0,
+      attendedEventPoint + outsideEventPoint + eventAdjustment,
+    );
+    const tutorPoint = Math.max(
+      0,
+      attendedTutorPoint + outsideTutorPoint + tutorAdjustment,
+    );
     const totalPoint = eventPoint + tutorPoint + attendencePoint;
 
     return {
@@ -733,6 +753,44 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
+    if (dto.pointType) {
+      const currentSummary = await this.getUserPointSummary(userId);
+      const currentCategoryPoint =
+        dto.pointType === 'tutorpoint'
+          ? currentSummary.tutorPoint
+          : currentSummary.eventPoint;
+
+      const diff = dto.point - currentCategoryPoint;
+      const newTotalPoint = Math.max(0, user.point + diff);
+
+      const updatedUser = await this.prisma.client.user.update({
+        where: { id: userId },
+        data: {
+          point: newTotalPoint,
+          ...(dto.pointType === 'tutorpoint'
+            ? { tutorAdjustment: { increment: diff } }
+            : { eventAdjustment: { increment: diff } }),
+        },
+        select: {
+          id: true,
+          firstname: true,
+          lastname: true,
+          username: true,
+          point: true,
+          tutorAdjustment: true,
+          eventAdjustment: true,
+          role: true,
+          isActive: true,
+          isDeleted: true,
+          updatedAt: true,
+        },
+      });
+
+      const updatedSummary = await this.getUserPointSummary(userId);
+
+      return { user: updatedUser, ...updatedSummary };
+    }
+
     const updatedUser = await this.prisma.client.user.update({
       where: { id: userId },
       data: { point: dto.point },
@@ -742,6 +800,8 @@ export class AuthService {
         lastname: true,
         username: true,
         point: true,
+        tutorAdjustment: true,
+        eventAdjustment: true,
         role: true,
         isActive: true,
         isDeleted: true,

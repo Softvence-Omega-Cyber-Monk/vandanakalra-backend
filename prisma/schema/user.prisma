@@ -35,6 +35,8 @@ model User {
   isNewEventNotify     Boolean    @default(true)
   isEventReminder      Boolean    @default(true)
   point                Int        @default(0)
+  tutorAdjustment      Int        @default(0)
+  eventAdjustment      Int        @default(0)
   role                 userRole   @default(USER)
   password             String
   isActive             Boolean    @default(false)
