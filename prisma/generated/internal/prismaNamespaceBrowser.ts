@@ -100,6 +100,8 @@ export const UserScalarFieldEnum = {
   isNewEventNotify: 'isNewEventNotify',
   isEventReminder: 'isEventReminder',
   point: 'point',
+  tutorAdjustment: 'tutorAdjustment',
+  eventAdjustment: 'eventAdjustment',
   role: 'role',
   password: 'password',
   isActive: 'isActive',

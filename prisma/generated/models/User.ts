@@ -28,10 +28,14 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   point: number | null
+  tutorAdjustment: number | null
+  eventAdjustment: number | null
 }
 
 export type UserSumAggregateOutputType = {
   point: number | null
+  tutorAdjustment: number | null
+  eventAdjustment: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -47,6 +51,8 @@ export type UserMinAggregateOutputType = {
   isNewEventNotify: boolean | null
   isEventReminder: boolean | null
   point: number | null
+  tutorAdjustment: number | null
+  eventAdjustment: number | null
   role: $Enums.userRole | null
   password: string | null
   isActive: boolean | null
@@ -72,6 +78,8 @@ export type UserMaxAggregateOutputType = {
   isNewEventNotify: boolean | null
   isEventReminder: boolean | null
   point: number | null
+  tutorAdjustment: number | null
+  eventAdjustment: number | null
   role: $Enums.userRole | null
   password: string | null
   isActive: boolean | null
@@ -97,6 +105,8 @@ export type UserCountAggregateOutputType = {
   isNewEventNotify: number
   isEventReminder: number
   point: number
+  tutorAdjustment: number
+  eventAdjustment: number
   role: number
   password: number
   isActive: number
@@ -113,10 +123,14 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   point?: true
+  tutorAdjustment?: true
+  eventAdjustment?: true
 }
 
 export type UserSumAggregateInputType = {
   point?: true
+  tutorAdjustment?: true
+  eventAdjustment?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -132,6 +146,8 @@ export type UserMinAggregateInputType = {
   isNewEventNotify?: true
   isEventReminder?: true
   point?: true
+  tutorAdjustment?: true
+  eventAdjustment?: true
   role?: true
   password?: true
   isActive?: true
@@ -157,6 +173,8 @@ export type UserMaxAggregateInputType = {
   isNewEventNotify?: true
   isEventReminder?: true
   point?: true
+  tutorAdjustment?: true
+  eventAdjustment?: true
   role?: true
   password?: true
   isActive?: true
@@ -182,6 +200,8 @@ export type UserCountAggregateInputType = {
   isNewEventNotify?: true
   isEventReminder?: true
   point?: true
+  tutorAdjustment?: true
+  eventAdjustment?: true
   role?: true
   password?: true
   isActive?: true
@@ -294,6 +314,8 @@ export type UserGroupByOutputType = {
   isNewEventNotify: boolean
   isEventReminder: boolean
   point: number
+  tutorAdjustment: number
+  eventAdjustment: number
   role: $Enums.userRole
   password: string
   isActive: boolean
@@ -342,6 +364,8 @@ export type UserWhereInput = {
   isNewEventNotify?: Prisma.BoolFilter<"User"> | boolean
   isEventReminder?: Prisma.BoolFilter<"User"> | boolean
   point?: Prisma.IntFilter<"User"> | number
+  tutorAdjustment?: Prisma.IntFilter<"User"> | number
+  eventAdjustment?: Prisma.IntFilter<"User"> | number
   role?: Prisma.EnumuserRoleFilter<"User"> | $Enums.userRole
   password?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
@@ -371,6 +395,8 @@ export type UserOrderByWithRelationInput = {
   isNewEventNotify?: Prisma.SortOrder
   isEventReminder?: Prisma.SortOrder
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
   role?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -403,6 +429,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isNewEventNotify?: Prisma.BoolFilter<"User"> | boolean
   isEventReminder?: Prisma.BoolFilter<"User"> | boolean
   point?: Prisma.IntFilter<"User"> | number
+  tutorAdjustment?: Prisma.IntFilter<"User"> | number
+  eventAdjustment?: Prisma.IntFilter<"User"> | number
   role?: Prisma.EnumuserRoleFilter<"User"> | $Enums.userRole
   password?: Prisma.StringFilter<"User"> | string
   isActive?: Prisma.BoolFilter<"User"> | boolean
@@ -432,6 +460,8 @@ export type UserOrderByWithAggregationInput = {
   isNewEventNotify?: Prisma.SortOrder
   isEventReminder?: Prisma.SortOrder
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
   role?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -465,6 +495,8 @@ export type UserScalarWhereWithAggregatesInput = {
   isNewEventNotify?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isEventReminder?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   point?: Prisma.IntWithAggregatesFilter<"User"> | number
+  tutorAdjustment?: Prisma.IntWithAggregatesFilter<"User"> | number
+  eventAdjustment?: Prisma.IntWithAggregatesFilter<"User"> | number
   role?: Prisma.EnumuserRoleWithAggregatesFilter<"User"> | $Enums.userRole
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -490,6 +522,8 @@ export type UserCreateInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -519,6 +553,8 @@ export type UserUncheckedCreateInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -548,6 +584,8 @@ export type UserUpdateInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -577,6 +615,8 @@ export type UserUncheckedUpdateInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -606,6 +646,8 @@ export type UserCreateManyInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -631,6 +673,8 @@ export type UserUpdateManyMutationInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -656,6 +700,8 @@ export type UserUncheckedUpdateManyInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -681,6 +727,8 @@ export type UserCountOrderByAggregateInput = {
   isNewEventNotify?: Prisma.SortOrder
   isEventReminder?: Prisma.SortOrder
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
   role?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -695,6 +743,8 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserAvgOrderByAggregateInput = {
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -710,6 +760,8 @@ export type UserMaxOrderByAggregateInput = {
   isNewEventNotify?: Prisma.SortOrder
   isEventReminder?: Prisma.SortOrder
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
   role?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -735,6 +787,8 @@ export type UserMinOrderByAggregateInput = {
   isNewEventNotify?: Prisma.SortOrder
   isEventReminder?: Prisma.SortOrder
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
   role?: Prisma.SortOrder
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -749,6 +803,8 @@ export type UserMinOrderByAggregateInput = {
 
 export type UserSumOrderByAggregateInput = {
   point?: Prisma.SortOrder
+  tutorAdjustment?: Prisma.SortOrder
+  eventAdjustment?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -854,6 +910,8 @@ export type UserCreateWithoutEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -882,6 +940,8 @@ export type UserUncheckedCreateWithoutEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -926,6 +986,8 @@ export type UserUpdateWithoutEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -954,6 +1016,8 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -982,6 +1046,8 @@ export type UserCreateWithoutOutsideEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1010,6 +1076,8 @@ export type UserUncheckedCreateWithoutOutsideEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1054,6 +1122,8 @@ export type UserUpdateWithoutOutsideEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1082,6 +1152,8 @@ export type UserUncheckedUpdateWithoutOutsideEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1110,6 +1182,8 @@ export type UserCreateWithoutEnrolledEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1138,6 +1212,8 @@ export type UserUncheckedCreateWithoutEnrolledEventsInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1182,6 +1258,8 @@ export type UserUpdateWithoutEnrolledEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1210,6 +1288,8 @@ export type UserUncheckedUpdateWithoutEnrolledEventsInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1238,6 +1318,8 @@ export type UserCreateWithoutAttendencesInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1266,6 +1348,8 @@ export type UserUncheckedCreateWithoutAttendencesInput = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: number
+  tutorAdjustment?: number
+  eventAdjustment?: number
   role?: $Enums.userRole
   password: string
   isActive?: boolean
@@ -1310,6 +1394,8 @@ export type UserUpdateWithoutAttendencesInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1338,6 +1424,8 @@ export type UserUncheckedUpdateWithoutAttendencesInput = {
   isNewEventNotify?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isEventReminder?: Prisma.BoolFieldUpdateOperationsInput | boolean
   point?: Prisma.IntFieldUpdateOperationsInput | number
+  tutorAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
+  eventAdjustment?: Prisma.IntFieldUpdateOperationsInput | number
   role?: Prisma.EnumuserRoleFieldUpdateOperationsInput | $Enums.userRole
   password?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1424,6 +1512,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: boolean
+  tutorAdjustment?: boolean
+  eventAdjustment?: boolean
   role?: boolean
   password?: boolean
   isActive?: boolean
@@ -1454,6 +1544,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: boolean
+  tutorAdjustment?: boolean
+  eventAdjustment?: boolean
   role?: boolean
   password?: boolean
   isActive?: boolean
@@ -1479,6 +1571,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: boolean
+  tutorAdjustment?: boolean
+  eventAdjustment?: boolean
   role?: boolean
   password?: boolean
   isActive?: boolean
@@ -1504,6 +1598,8 @@ export type UserSelectScalar = {
   isNewEventNotify?: boolean
   isEventReminder?: boolean
   point?: boolean
+  tutorAdjustment?: boolean
+  eventAdjustment?: boolean
   role?: boolean
   password?: boolean
   isActive?: boolean
@@ -1516,7 +1612,7 @@ export type UserSelectScalar = {
   adminEventReminders?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstname" | "lastname" | "username" | "fcmToken" | "image" | "resetPasswordToken" | "resetPasswordExpires" | "isEventApproveNotify" | "isNewEventNotify" | "isEventReminder" | "point" | "role" | "password" | "isActive" | "isDeleted" | "createdAt" | "updatedAt" | "adminAutoApprovePoint" | "adminAllowCustomPoint" | "adminCreateEventNotify" | "adminEventReminders", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstname" | "lastname" | "username" | "fcmToken" | "image" | "resetPasswordToken" | "resetPasswordExpires" | "isEventApproveNotify" | "isNewEventNotify" | "isEventReminder" | "point" | "tutorAdjustment" | "eventAdjustment" | "role" | "password" | "isActive" | "isDeleted" | "createdAt" | "updatedAt" | "adminAutoApprovePoint" | "adminAllowCustomPoint" | "adminCreateEventNotify" | "adminEventReminders", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   enrolledEvents?: boolean | Prisma.User$enrolledEventsArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
@@ -1548,6 +1644,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isNewEventNotify: boolean
     isEventReminder: boolean
     point: number
+    tutorAdjustment: number
+    eventAdjustment: number
     role: $Enums.userRole
     password: string
     isActive: boolean
@@ -1997,6 +2095,8 @@ export interface UserFieldRefs {
   readonly isNewEventNotify: Prisma.FieldRef<"User", 'Boolean'>
   readonly isEventReminder: Prisma.FieldRef<"User", 'Boolean'>
   readonly point: Prisma.FieldRef<"User", 'Int'>
+  readonly tutorAdjustment: Prisma.FieldRef<"User", 'Int'>
+  readonly eventAdjustment: Prisma.FieldRef<"User", 'Int'>
   readonly role: Prisma.FieldRef<"User", 'userRole'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
