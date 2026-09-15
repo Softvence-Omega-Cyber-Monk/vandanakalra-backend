@@ -20,7 +20,7 @@ services:
         condition: service_healthy
     command: >
       sh -c "
-        npx prisma migrate deploy;
+        npx prisma migrate deploy &&
         npm run start
       "
     volumes:
@@ -51,8 +51,8 @@ services:
       sh -c "
         echo '🏁 Waiting for DB...';
         sleep 5;
-        npx prisma migrate deploy;
-        echo '🚀 Starting app...';
+        npx prisma migrate deploy &&
+        echo '🚀 Starting app...' &&
         npm run start
       "
     volumes:
