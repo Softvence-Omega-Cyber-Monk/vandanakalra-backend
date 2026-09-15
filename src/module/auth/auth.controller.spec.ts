@@ -40,10 +40,7 @@ describe('AuthController', () => {
   });
 
   it('allows admins and superadmins to manually update user points', () => {
-    const roles = Reflect.getMetadata(
-      ROLES_KEY,
-      controller.updateUserPoint,
-    );
+    const roles = Reflect.getMetadata(ROLES_KEY, controller.updateUserPoint);
 
     expect(roles).toEqual([userRole.ADMIN, userRole.SUPERADMIN]);
   });
@@ -57,8 +54,6 @@ describe('AuthController', () => {
         lastname: 'Doe',
         username: 'jane@example.com',
         point: 120,
-        tutorAdjustment: 0,
-        eventAdjustment: 0,
         role: userRole.USER,
         isActive: true,
         isDeleted: false,
@@ -82,71 +77,12 @@ describe('AuthController', () => {
     });
   });
 
-  it('updates specific point type and returns full summary', async () => {
-    const response = res();
-    const serviceResult = {
-      user: {
-        id: 'user-1',
-        firstname: 'Jane',
-        lastname: 'Doe',
-        username: 'jane@example.com',
-        point: 75,
-        tutorAdjustment: -10,
-        eventAdjustment: 0,
-        role: userRole.USER,
-        isActive: true,
-        isDeleted: false,
-        updatedAt: new Date(),
-      },
-      totalPoint: 75,
-      eventPoint: 50,
-      tutorPoint: 20,
-      attendencePoint: 5,
-    };
-
-    authService.updateUserPoint.mockResolvedValue(serviceResult);
-
-    await controller.updateUserPoint(
-      'user-1',
-      { point: 20, pointType: 'tutorpoint' as any },
-      response,
-    );
-
-    expect(authService.updateUserPoint).toHaveBeenCalledWith('user-1', {
-      point: 20,
-      pointType: 'tutorpoint',
-    });
-    expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
-    expect(response.json).toHaveBeenCalledWith({
-      statusCode: HttpStatus.OK,
-      success: true,
-      message: 'User points updated successfully',
-      data: serviceResult,
-    });
-  });
-
-  it('validates point edit payloads including pointType', async () => {
+  it('validates point edit payloads', async () => {
     const validDto = plainToInstance(UpdateUserPointDto, { point: 120 });
-    const validWithTutorType = plainToInstance(UpdateUserPointDto, {
-      point: 20,
-      pointType: 'tutorpoint',
-    });
-    const validWithEventType = plainToInstance(UpdateUserPointDto, {
-      point: 40,
-      pointType: 'eventpoint',
-      reason: 'Bonus points',
-    });
-    const invalidTypeDto = plainToInstance(UpdateUserPointDto, {
-      point: 20,
-      pointType: 'invalid_type',
-    });
     const negativeDto = plainToInstance(UpdateUserPointDto, { point: -1 });
     const decimalDto = plainToInstance(UpdateUserPointDto, { point: 10.5 });
 
     await expect(validate(validDto)).resolves.toHaveLength(0);
-    await expect(validate(validWithTutorType)).resolves.toHaveLength(0);
-    await expect(validate(validWithEventType)).resolves.toHaveLength(0);
-    await expect(validate(invalidTypeDto)).resolves.not.toHaveLength(0);
     await expect(validate(negativeDto)).resolves.not.toHaveLength(0);
     await expect(validate(decimalDto)).resolves.not.toHaveLength(0);
   });

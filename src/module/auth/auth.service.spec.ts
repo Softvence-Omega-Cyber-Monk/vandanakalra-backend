@@ -58,8 +58,6 @@ describe('AuthService', () => {
       lastname: 'Doe',
       username: 'jane@example.com',
       point: 120,
-      tutorAdjustment: 0,
-      eventAdjustment: 0,
       role: userRole.USER,
       isActive: true,
       isDeleted: false,
@@ -82,75 +80,12 @@ describe('AuthService', () => {
         lastname: true,
         username: true,
         point: true,
-        tutorAdjustment: true,
-        eventAdjustment: true,
         role: true,
         isActive: true,
         isDeleted: true,
         updatedAt: true,
       },
     });
-  });
-
-  it('adjusts tutorpoint and updates total points accordingly', async () => {
-    const existingUser = {
-      id: 'user-1',
-      point: 85,
-      tutorAdjustment: 0,
-      eventAdjustment: 0,
-      isDeleted: false,
-    };
-
-    prisma.client.user.findUnique.mockResolvedValue(existingUser);
-    prisma.client.enrolled.findMany.mockResolvedValue([
-      { event: { pointValue: 30, eventType: 'tutorpoint' } },
-    ]);
-    prisma.client.outsideEvent.findMany.mockResolvedValue([]);
-    prisma.client.attendence.count.mockResolvedValue(0);
-
-    const updatedUser = {
-      id: 'user-1',
-      firstname: 'Jane',
-      lastname: 'Doe',
-      username: 'jane@example.com',
-      point: 75,
-      tutorAdjustment: -10,
-      eventAdjustment: 0,
-      role: userRole.USER,
-      isActive: true,
-      isDeleted: false,
-      updatedAt: new Date(),
-    };
-    prisma.client.user.update.mockResolvedValue(updatedUser);
-
-    const result = await service.updateUserPoint('user-1', {
-      point: 20,
-      pointType: 'tutorpoint' as any,
-    });
-
-    expect(prisma.client.user.update).toHaveBeenCalledWith({
-      where: { id: 'user-1' },
-      data: {
-        point: 75,
-        tutorAdjustment: { increment: -10 },
-      },
-      select: {
-        id: true,
-        firstname: true,
-        lastname: true,
-        username: true,
-        point: true,
-        tutorAdjustment: true,
-        eventAdjustment: true,
-        role: true,
-        isActive: true,
-        isDeleted: true,
-        updatedAt: true,
-      },
-    });
-
-    expect(result).toHaveProperty('user');
-    expect(result).toHaveProperty('tutorPoint');
   });
 
   it('rejects point edits for a missing user', async () => {
