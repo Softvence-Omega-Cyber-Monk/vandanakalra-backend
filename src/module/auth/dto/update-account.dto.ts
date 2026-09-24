@@ -1,6 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsEnum,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+import { OutsideEventType } from '@prisma';
 
 export class AccountActiveDto {
   @ApiProperty({
@@ -68,7 +76,8 @@ export class UpdateUserProfileDto {
 
 export class UpdateUserPointDto {
   @ApiProperty({
-    description: 'New total point balance for the user',
+    description:
+      'New total point balance, or new category balance when pointType is provided',
     example: 100,
     minimum: 0,
   })
@@ -76,4 +85,24 @@ export class UpdateUserPointDto {
   @IsInt()
   @Min(0)
   point: number;
+
+  @ApiPropertyOptional({
+    description:
+      'Specific point type to update. If omitted, updates the stored total points directly.',
+    enum: OutsideEventType,
+    example: OutsideEventType.tutorpoint,
+  })
+  @IsOptional()
+  @IsEnum(OutsideEventType, {
+    message: 'pointType must be either eventpoint or tutorpoint',
+  })
+  pointType?: OutsideEventType;
+
+  @ApiPropertyOptional({
+    description: 'Optional reason for the manual point adjustment',
+    example: 'Admin correction',
+  })
+  @IsOptional()
+  @IsString()
+  reason?: string;
 }
