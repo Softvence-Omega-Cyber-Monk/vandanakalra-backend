@@ -800,6 +800,68 @@ export class AuthService {
     return { user: updatedUser };
   }
 
+  async getUserPointAdjustmentHistory(userId: string) {
+    const user = await this.prisma.client.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        firstname: true,
+        lastname: true,
+        username: true,
+        point: true,
+        isDeleted: true,
+      },
+    });
+
+    if (!user || user.isDeleted) {
+      throw new NotFoundException('User not found');
+    }
+
+    const adjustments = await this.prisma.client.outsideEvent.findMany({
+      where: {
+        userId,
+        approved: true,
+        title: 'Manual point adjustment',
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        pointValue: true,
+        eventType: true,
+        approved: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const totalAdded = adjustments.reduce((sum, adjustment) => {
+      return adjustment.pointValue > 0 ? sum + adjustment.pointValue : sum;
+    }, 0);
+
+    const totalDeducted = adjustments.reduce((sum, adjustment) => {
+      return adjustment.pointValue < 0
+        ? sum + Math.abs(adjustment.pointValue)
+        : sum;
+    }, 0);
+
+    return {
+      user: {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        username: user.username,
+        point: user.point,
+      },
+      adjustments,
+      totalCount: adjustments.length,
+      totalAdded,
+      totalDeducted,
+    };
+  }
+
   async deleteAccount(userId: string) {
     const user = await this.prisma.client.user.findUnique({
       where: { id: userId },

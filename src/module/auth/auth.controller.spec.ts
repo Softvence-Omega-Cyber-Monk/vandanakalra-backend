@@ -11,7 +11,9 @@ import { UpdateUserPointDto } from './dto/update-account.dto';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: jest.Mocked<Pick<AuthService, 'updateUserPoint'>>;
+  let authService: jest.Mocked<
+    Pick<AuthService, 'updateUserPoint' | 'getUserPointAdjustmentHistory'>
+  >;
 
   const res = () =>
     ({
@@ -22,6 +24,7 @@ describe('AuthController', () => {
   beforeEach(async () => {
     authService = {
       updateUserPoint: jest.fn(),
+      getUserPointAdjustmentHistory: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -41,6 +44,15 @@ describe('AuthController', () => {
 
   it('allows admins and superadmins to manually update user points', () => {
     const roles = Reflect.getMetadata(ROLES_KEY, controller.updateUserPoint);
+
+    expect(roles).toEqual([userRole.ADMIN, userRole.SUPERADMIN]);
+  });
+
+  it('allows admins and superadmins to view manual point adjustment history', () => {
+    const roles = Reflect.getMetadata(
+      ROLES_KEY,
+      controller.getUserPointAdjustmentHistory,
+    );
 
     expect(roles).toEqual([userRole.ADMIN, userRole.SUPERADMIN]);
   });
@@ -73,6 +85,48 @@ describe('AuthController', () => {
       statusCode: HttpStatus.OK,
       success: true,
       message: 'User points updated successfully',
+      data: serviceResult,
+    });
+  });
+
+  it('returns user point adjustment history', async () => {
+    const response = res();
+    const serviceResult = {
+      user: {
+        id: 'user-1',
+        firstname: 'Jane',
+        lastname: 'Doe',
+        username: 'jane@example.com',
+        point: 75,
+      },
+      adjustments: [
+        {
+          id: 'adjustment-1',
+          title: 'Manual point adjustment',
+          description: 'Correction',
+          pointValue: -10,
+          eventType: 'tutorpoint' as const,
+          approved: true,
+          createdAt: new Date(),
+        },
+      ],
+      totalCount: 1,
+      totalAdded: 0,
+      totalDeducted: 10,
+    };
+
+    authService.getUserPointAdjustmentHistory.mockResolvedValue(serviceResult);
+
+    await controller.getUserPointAdjustmentHistory('user-1', response);
+
+    expect(authService.getUserPointAdjustmentHistory).toHaveBeenCalledWith(
+      'user-1',
+    );
+    expect(response.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(response.json).toHaveBeenCalledWith({
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Manual point adjustment history retrieved successfully',
       data: serviceResult,
     });
   });

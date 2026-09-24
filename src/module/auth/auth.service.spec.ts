@@ -168,6 +168,76 @@ describe('AuthService', () => {
     });
   });
 
+  it('returns manual point adjustment history for a user', async () => {
+    const user = {
+      id: 'user-1',
+      firstname: 'Jane',
+      lastname: 'Doe',
+      username: 'jane@example.com',
+      point: 75,
+      isDeleted: false,
+    };
+    const adjustments = [
+      {
+        id: 'adjustment-1',
+        title: 'Manual point adjustment',
+        description: 'Correction',
+        pointValue: -10,
+        eventType: 'tutorpoint',
+        approved: true,
+        createdAt: new Date(),
+      },
+      {
+        id: 'adjustment-2',
+        title: 'Manual point adjustment',
+        description: 'Bonus',
+        pointValue: 5,
+        eventType: 'eventpoint',
+        approved: true,
+        createdAt: new Date(),
+      },
+    ];
+
+    prisma.client.user.findUnique.mockResolvedValue(user);
+    prisma.client.outsideEvent.findMany.mockResolvedValue(adjustments);
+
+    await expect(
+      service.getUserPointAdjustmentHistory('user-1'),
+    ).resolves.toEqual({
+      user: {
+        id: 'user-1',
+        firstname: 'Jane',
+        lastname: 'Doe',
+        username: 'jane@example.com',
+        point: 75,
+      },
+      adjustments,
+      totalCount: 2,
+      totalAdded: 5,
+      totalDeducted: 10,
+    });
+
+    expect(prisma.client.outsideEvent.findMany).toHaveBeenCalledWith({
+      where: {
+        userId: 'user-1',
+        approved: true,
+        title: 'Manual point adjustment',
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        pointValue: true,
+        eventType: true,
+        approved: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  });
+
   it('rejects point edits for a missing user', async () => {
     prisma.client.user.findUnique.mockResolvedValue(null);
 

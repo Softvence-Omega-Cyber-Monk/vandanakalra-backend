@@ -400,6 +400,29 @@ export class AuthController {
     });
   }
 
+  @Get('users/:userId/point-adjustments')
+  @Roles(userRole.ADMIN, userRole.SUPERADMIN)
+  @ApiOperation({ summary: 'Get manual point adjustment history' })
+  @ApiParam({ name: 'userId', description: 'The ID of the user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Manual point adjustment history retrieved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserPointAdjustmentHistory(
+    @Param('userId') userId: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.authService.getUserPointAdjustmentHistory(userId);
+
+    return sendResponse(res, {
+      statusCode: HttpStatus.OK,
+      success: true,
+      message: 'Manual point adjustment history retrieved successfully',
+      data: result,
+    });
+  }
+
   @Get('notActivatedUsers')
   @Roles(userRole.ADMIN)
   async getNotActiveteUser(@Res() res: Response) {
