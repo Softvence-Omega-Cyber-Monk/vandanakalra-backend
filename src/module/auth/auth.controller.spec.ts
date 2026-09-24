@@ -79,10 +79,21 @@ describe('AuthController', () => {
 
   it('validates point edit payloads', async () => {
     const validDto = plainToInstance(UpdateUserPointDto, { point: 120 });
+    const validTypeDto = plainToInstance(UpdateUserPointDto, {
+      point: 20,
+      pointType: 'tutorpoint',
+      reason: 'Correction',
+    });
+    const invalidTypeDto = plainToInstance(UpdateUserPointDto, {
+      point: 20,
+      pointType: 'invalid',
+    });
     const negativeDto = plainToInstance(UpdateUserPointDto, { point: -1 });
     const decimalDto = plainToInstance(UpdateUserPointDto, { point: 10.5 });
 
     await expect(validate(validDto)).resolves.toHaveLength(0);
+    await expect(validate(validTypeDto)).resolves.toHaveLength(0);
+    await expect(validate(invalidTypeDto)).resolves.not.toHaveLength(0);
     await expect(validate(negativeDto)).resolves.not.toHaveLength(0);
     await expect(validate(decimalDto)).resolves.not.toHaveLength(0);
   });

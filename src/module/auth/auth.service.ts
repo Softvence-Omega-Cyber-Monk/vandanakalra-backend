@@ -733,6 +733,54 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
+    if (dto.pointType) {
+      const currentSummary = await this.getUserPointSummary(userId);
+      const currentTypePoint =
+        dto.pointType === 'tutorpoint'
+          ? currentSummary.tutorPoint
+          : currentSummary.eventPoint;
+      const pointDifference = dto.point - currentTypePoint;
+      const newTotalPoint = Math.max(
+        0,
+        currentSummary.totalPoint + pointDifference,
+      );
+
+      const updatedUser = await this.prisma.client.$transaction(async (tx) => {
+        await tx.outsideEvent.create({
+          data: {
+            title: 'Manual point adjustment',
+            description:
+              dto.reason ||
+              `Manual ${dto.pointType} adjustment by admin/superadmin`,
+            pointValue: pointDifference,
+            approved: true,
+            eventType: dto.pointType,
+            userId,
+          },
+        });
+
+        return tx.user.update({
+          where: { id: userId },
+          data: { point: newTotalPoint },
+          select: {
+            id: true,
+            firstname: true,
+            lastname: true,
+            username: true,
+            point: true,
+            role: true,
+            isActive: true,
+            isDeleted: true,
+            updatedAt: true,
+          },
+        });
+      });
+
+      const updatedSummary = await this.getUserPointSummary(userId);
+
+      return { user: updatedUser, ...updatedSummary };
+    }
+
     const updatedUser = await this.prisma.client.user.update({
       where: { id: userId },
       data: { point: dto.point },
