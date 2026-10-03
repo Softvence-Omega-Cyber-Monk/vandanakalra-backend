@@ -57,6 +57,12 @@ describe('AuthController', () => {
     expect(roles).toEqual([userRole.ADMIN, userRole.SUPERADMIN]);
   });
 
+  it('allows users, admins, and superadmins to delete accounts', () => {
+    const roles = Reflect.getMetadata(ROLES_KEY, controller.deleteAccount);
+
+    expect(roles).toEqual([userRole.USER, userRole.ADMIN, userRole.SUPERADMIN]);
+  });
+
   it('updates user points and returns the standard response shape', async () => {
     const response = res();
     const serviceResult = {
